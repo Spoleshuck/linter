@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
-import '../utils.dart';
+import '../util/ascii_utils.dart';
 
 const _desc = r'Avoid defining unused parameters in constructors.';
 
@@ -59,7 +59,7 @@ class _ConstructorVisitor extends RecursiveAstVisitor {
           return element != null &&
               element is! FieldFormalParameterElement &&
               !element.hasDeprecated &&
-              !isJustUnderscores(element.name);
+              !element.name.isJustUnderscores;
         }).toSet();
 
   @override
@@ -79,12 +79,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.redirectedConstructor != null) return;
     if (node.externalKeyword != null) return;
 
-    var _constructorVisitor = _ConstructorVisitor(rule, node);
-    node.body.visitChildren(_constructorVisitor);
+    var constructorVisitor = _ConstructorVisitor(rule, node);
+    node.body.visitChildren(constructorVisitor);
     for (var i in node.initializers) {
-      i.visitChildren(_constructorVisitor);
+      i.visitChildren(constructorVisitor);
     }
 
-    _constructorVisitor.unusedParameters.forEach(rule.reportLint);
+    constructorVisitor.unusedParameters.forEach(rule.reportLint);
   }
 }
