@@ -46,8 +46,8 @@ amount of optional parameters.
 
 ''';
 
-class SortNamedParametersAlphabetically extends LintRule {
-  SortNamedParametersAlphabetically()
+class SortNamedParameters extends LintRule {
+  SortNamedParameters()
       : super(
             name: 'sort_named_parameters',
             description: _desc,
